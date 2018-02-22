@@ -24,11 +24,17 @@ It combines the steps above presuming you follow certain conventions:
 
 ## Get started
 
-Go to the [skeleton](./skeleton) dir.
-Copy the files to your add-on and launch `wesnoth_publish.sh`.
-Ideally, the script will report all problem it sees,
-or it can just work out of the box if you do not need
-any changes to `_server.pbl`.
+1. Copy the files from [skeleton](./skeleton) dir to your project.
+1. Remove "passphrase" from `_server.pbl` and copy the password itself to `.build/.passphrase`.
+1. Remove "description" from `_server.pbl` and copy the description itself to `doc/about.txt`.
+1. Remove "version" from `_server.pbl`.
+1. Optionally, put `_server.pbl` in git as it no longer contains the passphrase.
+1. Specify wesnoth versions your add-on is compatible with (1.12 and 1.13 by default).
+1. Commit your changes (to git).
+1. Presuming you want to upload version `X.Y.Z`, execute this in your project dir:
+`wesnoth_upload.sh "X.Y.Z"`
+
+Note that most of the steps can be overridden in `.build/config.sh`. You may f.e. use a different passphrase generation command if you like. Or change how "description" is generated: maybe it's generated from a pandoc markup by stripping all tags? I use that personally.
 
 ## Examples
 The following add-ons also use this script:
@@ -36,5 +42,6 @@ The following add-ons also use this script:
 * https://github.com/vgaming/afterlife
 * https://github.com/vgaming/berserk_limiter
 * https://github.com/vgaming/CreepWars
+* https://github.com/vgaming/gold_per_village
 
 (Write me if you'd like your add-on to be listed here.)

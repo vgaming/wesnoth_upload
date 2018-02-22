@@ -92,7 +92,7 @@ fi
 
 #### create a git tag for each upload
 git tag "$tag"
-
+trap 'git tag --delete "$tag"' ERR
 
 #### upload
 upload
