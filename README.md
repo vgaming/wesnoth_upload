@@ -34,7 +34,7 @@ It combines the steps above presuming you follow certain conventions:
 1. Presuming you want to upload version `X.Y.Z`, execute this in your project dir:
 `wesnoth_upload.sh "X.Y.Z"`
 
-Note that most of the steps can be overridden in `.build/config.sh`. You may f.e. use a different passphrase generation command if you like. Or change how "description" is generated: maybe it's generated from a pandoc markup by stripping all tags? I use that personally.
+You may re-configure the steps above in `.build/config.sh`. You may f.e. use a different passphrase generation command if you like. Or change how "description" is generated: maybe it's generated from a pandoc markup by stripping all tags? I use that personally.
 
 ## Examples
 The following add-ons also use this script:
