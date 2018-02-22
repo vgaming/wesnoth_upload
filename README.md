@@ -11,7 +11,7 @@ It intends to replace the following steps:
 * Make sure you didn't forget to check your Lua code before doing a release (`luacheck`)
 * Make sure you didn't forget to `git tag` each release you make. Otherwise you won't remember what you had in release X.Y.Z after a few days/hours/releases.
 * Start wesnoth-1.12, open add-ons, find your add-on, click upload.
-* If you use wesnoth-1.13, do all of the steps above for this wesnoth version.
+* If you also use wesnoth-1.13, repeat it once again.
 
 ## How does it work
 
@@ -30,9 +30,9 @@ It combines the steps above presuming you follow certain conventions:
 1. Remove "version" from `_server.pbl`.
 1. Optionally, put `_server.pbl` in git as it no longer contains the passphrase.
 1. Specify wesnoth versions your add-on is compatible with (1.12 and 1.13 by default).
-1. Commit your changes (to git).
+1. Commit your changes.
 1. Presuming you want to upload version `X.Y.Z`, execute this in your project dir:
-`wesnoth_upload.sh "X.Y.Z"`
+`wesnoth_upload "X.Y.Z"`
 
 You may re-configure the steps above in `.build/config.sh`. You may f.e. use a different passphrase generation command if you like. Or change how "description" is generated: maybe it's generated from a pandoc markup by stripping all tags? I use that personally.
 
