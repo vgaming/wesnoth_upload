@@ -28,9 +28,10 @@ See the [skeleton](./skeleton) dir an example of a directory layout you'll have 
 Copy these files to your add-on and launch `wesnoth_publish.sh`. Ideally, the script will report all problem it sees, or it can just work out of the box if you do not need any changes to `_server.pbl`.
 
 ## Examples
-The following add-ons use this script and may be considered examples:
+The following add-ons also use this script:
 
 * https://github.com/vgaming/afterlife
 * https://github.com/vgaming/berserk_limiter
+* https://github.com/vgaming/CreepWars
 
 (Write me if you'd like your add-on to be listed here.)
