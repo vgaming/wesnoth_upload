@@ -2,10 +2,14 @@
 set -o pipefail
 {
 
+err_exit() {
+	>&2 printf "%s" "$*"
+	exit 1
+}
+
 #### check arguments
 if test "$#" != 1; then
-	>&2 echo "ERROR. Invalid number of arguments. Usage $0 <TAG_NAME>"
-	exit 1
+	err_exit "ERROR. Invalid number of arguments. Usage $0 <TAG_NAME>"
 fi
 tag="$1"
 
@@ -46,8 +50,7 @@ upload() {
 
 #### source user config
 if ! source .build/config.sh; then
-	>&2 echo "ERROR. Could not source .build/config.sh"
-	exit 1
+	err_exit "ERROR. Could not source .build/config.sh"
 fi
 
 
@@ -57,11 +60,11 @@ if test "${#all_lua_files[@]}" -ne 0; then
 	if test "${luacheck_ignore:-}" = "true"; then
 		true
 	elif ! which "$luacheck_binary" >/dev/null 2>&1; then
-		>&2 echo "WARNING. $luacheck_binary binary not found." \
+		err_exit "WARNING. $luacheck_binary binary not found." \
 			"Could not check your lua files." \
 			"You can disable luacheck by setting luacheck_ignore=true"
 	elif ! test -f "$luacheckrc"; then
-		>&2 echo "WARNING: $luacheckrc not found. " \
+		err_exit "WARNING: $luacheckrc not found. " \
 			"Could not check your lua files. " \
 			"You can disable luacheck by setting luacheck_ignore=true"
 	else
@@ -74,9 +77,8 @@ fi
 
 #### only upload clean git directory, no uncommitted changes
 if ! test -z "$(git status --porcelain)" && test "${uncommitted_ignore:-}" != "true" ; then
-	>&2 echo "ERROR. You have uncommitted changes." \
+	err_exit "ERROR. You have uncommitted changes." \
 		"You can disable this check by setting uncommitted_ignore=true"
-	exit -1
 fi
 
 
@@ -84,9 +86,8 @@ fi
 if test "${not_pushed_ignore:-}" != "true" &&
 	! test "$(git rev-parse HEAD)" = "$(git rev-parse '@{u}')"
 then
-	>&2 echo "ERROR. git push first!" \
+	err_exit "ERROR. git push first!" \
 		"You can disable this check by setting not_pushed_ignore=true"
-	exit 1
 fi
 
 
