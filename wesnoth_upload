@@ -3,7 +3,7 @@ set -o pipefail
 {
 
 err_exit() {
-	>&2 printf "%s" "$*"
+	>&2 printf "%s\n" "$*"
 	exit 1
 }
 
