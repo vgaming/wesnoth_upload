@@ -35,6 +35,7 @@ passphrase() {
 }
 
 upload_to_wesnoth_versions=(1.12 1.13)
+addon_manager_args=()
 upload() {
 	#dir_name="$(basename "$(realpath .)")"
 	#--upload ~/.local/share/wesnoth/1.13/data/add-ons/"$dir_name"
@@ -43,6 +44,7 @@ upload() {
 			--pbl-key "version" "$(version)" \
 			--pbl-key "description" "$(description)" \
 			--pbl-key "passphrase" "$(passphrase)" \
+			"${addon_manager_args[@]}" \
 			--upload .
 	done
 }
