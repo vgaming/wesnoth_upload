@@ -100,5 +100,6 @@ trap 'git tag --delete "$tag"' ERR
 #### upload
 upload
 
+rm ./packet.dump
 
 }; exit 0
