@@ -19,33 +19,34 @@ luacheckrc='.build/.luacheckrc'
 luacheck_binary='luacheck'
 luacheck_ignore=false
 
+data_dir="$(basename "$(realpath .)")"
 uncommitted_ignore=false
 not_pushed_ignore=false
 
 version() {
-	mkdir -p data/target
-	git describe --tags | cut -d '-' -f -2 | tr -d '\n' | tee data/target/version.txt
-	cat data/target/version.txt | tr '.-' '__' > data/target/version_nodot.txt
+	test -e "$data_dir"
+	mkdir -p "$data_dir"/target
+	git describe --tags | cut -d '-' -f -2 | tr -d '\n' | tee "$data_dir"/target/version.txt
+	cat "$data_dir"/target/version.txt | tr '.-' '__' > "$data_dir"/target/version_nodot.txt
 }
 description() {
-	cat data/doc/about.txt
+	cat "$data_dir"/doc/about.txt
 }
 passphrase() {
 	cat .build/.passphrase
 }
 
-upload_to_wesnoth_versions=(1.12 1.13)
+upload_to_wesnoth_versions=(1.12 1.13 1.14)
 addon_manager_args=()
 upload() {
-	#dir_name="$(basename "$(realpath .)")"
-	#--upload ~/.local/share/wesnoth/1.13/data/add-ons/"$dir_name"
+	#--upload ~/.local/share/wesnoth/1.13/data/add-ons/"$data_dir"
 	for ver in "${upload_to_wesnoth_versions[@]}"; do
 		wesnoth_addon_manager --port "$ver.x" \
 			--pbl-key "version" "$(version)" \
 			--pbl-key "description" "$(description)" \
 			--pbl-key "passphrase" "$(passphrase)" \
 			"${addon_manager_args[@]}" \
-			--upload data
+			--upload "$data_dir"
 	done
 }
 
@@ -55,9 +56,13 @@ if ! source .build/config.sh; then
 	err_exit "ERROR. Could not source .build/config.sh"
 fi
 
+if ! test -e "$data_dir"; then
+	err_exit "ERROR. data_dir '$data_dir' not found (directory containing add-on data)"
+fi
+
 
 #### use luacheck to find possible problems in Lua code
-readarray -td '' all_lua_files < <(find data/ -name '*.lua' -print0)
+readarray -td '' all_lua_files < <(find "$data_dir"/ -name '*.lua' -print0)
 if test "${#all_lua_files[@]}" -ne 0; then
 	if test "${luacheck_ignore:-}" = "true"; then
 		true
