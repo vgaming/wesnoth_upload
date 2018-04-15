@@ -40,6 +40,7 @@ You may re-configure the steps above in `.build/config.sh`. You may f.e. use a d
 The following add-ons also use this script:
 
 * https://github.com/vgaming/afterlife
+* https://github.com/vgaming/pick_advance
 * https://github.com/vgaming/berserk_limiter
 * https://github.com/vgaming/CreepWars
 * https://github.com/vgaming/gold_per_village
