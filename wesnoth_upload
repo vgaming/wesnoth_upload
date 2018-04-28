@@ -1,4 +1,4 @@
-#!/bin/bash -eu
+#!/bin/bash -euET
 set -o pipefail
 {
 
@@ -36,7 +36,7 @@ passphrase() {
 	cat .build/.passphrase
 }
 
-upload_to_wesnoth_versions=(1.12 1.13 1.14)
+upload_to_wesnoth_versions=(1.12 1.14)
 addon_manager_args=()
 upload() {
 	#--upload ~/.local/share/wesnoth/1.13/data/add-ons/"$data_dir"
