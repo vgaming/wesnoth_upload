@@ -107,4 +107,5 @@ upload
 
 rm ./packet.dump
 
-}; exit 0
+exit
+}

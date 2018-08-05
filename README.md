@@ -44,6 +44,7 @@ The following add-ons also use this script:
 * https://github.com/vgaming/berserk_limiter
 * https://github.com/vgaming/CreepWars
 * https://github.com/vgaming/gold_per_village
+* https://github.com/vgaming/mirror_faction
 * https://github.com/vgaming/science
 
 (Write me if you'd like your add-on to be listed here.)
