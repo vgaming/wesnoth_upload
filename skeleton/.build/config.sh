@@ -38,7 +38,7 @@
 ######## uploading settings:
 
 #### Which wesnoth versions to upload to?
-#upload_to_wesnoth_versions=(1.12 1.13)
+#upload_to_wesnoth_versions=(1.14)
 
 #### If you want to use a custom uploading script, override this method
 #upload() { true; }
