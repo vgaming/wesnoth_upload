@@ -19,18 +19,19 @@ luacheckrc='.build/.luacheckrc'
 luacheck_binary='luacheck'
 luacheck_ignore=false
 
-data_dir="$(basename "$(realpath .)")"
+data_dir=$(basename -- "$(realpath src)")
+mkdir -p src/target
+printf "%s" "$data_dir" > src/target/addon_dir
+
 uncommitted_ignore=false
 not_pushed_ignore=false
 
 version() {
-	test -e "$data_dir"
-	mkdir -p "$data_dir"/target
-	git describe --tags | cut -d '-' -f -2 | tr -d '\n' | tee "$data_dir"/target/version.txt
-	cat "$data_dir"/target/version.txt | tr '.-' '__' > "$data_dir"/target/version_nodot.txt
+	git describe --tags | cut -d '-' -f -2 | tr -d '\n' | tee src/target/version.txt
+	cat src/target/version.txt | tr '.-' '__' > src/target/version_nodot.txt
 }
 description() {
-	cat "$data_dir"/doc/about.txt
+	cat src/doc/about.txt
 }
 passphrase() {
 	cat .build/.passphrase
@@ -56,13 +57,9 @@ if ! source .build/config.sh; then
 	err_exit "ERROR. Could not source .build/config.sh"
 fi
 
-if ! test -e "$data_dir"; then
-	err_exit "ERROR. data_dir '$data_dir' not found (directory containing add-on data)"
-fi
-
 
 #### use luacheck to find possible problems in Lua code
-readarray -td '' all_lua_files < <(find "$data_dir"/ -name '*.lua' -print0)
+readarray -td '' all_lua_files < <(find src/ -name '*.lua' -print0)
 if test "${#all_lua_files[@]}" -ne 0; then
 	if test "${luacheck_ignore:-}" = "true"; then
 		true
