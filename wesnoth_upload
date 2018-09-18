@@ -96,7 +96,7 @@ fi
 
 
 #### increase version according to semver
-last_tag=$(git describe --tags 2>/dev/null || echo "0.0.0")
+last_tag=$(git describe --abbrev=0 --tags 2>/dev/null || echo "0.0.0")
 semver=( ${last_tag//./ } )
 major=${semver[0]}
 minor=${semver[1]:-0}
@@ -107,6 +107,8 @@ elif test "--minor" = "$tag"; then
 	tag="$major.$((minor+1)).0"
 elif test "--patch" = "$tag"; then
 	tag="$major.$minor.$((patch+1))"
+#else
+#	err_exit "Unexpected tag name $tag. Please specify either --major, --minor or --patch"
 fi
 
 #### create a git tag for each upload
