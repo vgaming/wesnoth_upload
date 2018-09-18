@@ -95,8 +95,22 @@ then
 fi
 
 
+#### increase version according to semver
+last_tag=$(git describe --tags 2>/dev/null || echo "0.0.0")
+major=${last_tag%%.*}
+patch=${last_tag##*.}
+minor=${last_tag%.*}
+minor=${minor#*.}
+if test "--major" = "$tag" ; then
+	tag="$((major+1)).0.0"
+elif test "--minor" = "$tag"; then
+	tag="$major.$((minor+1)).0"
+elif test "--patch" = "$tag"; then
+	tag="$major.$minor.$((patch+1))"
+fi
+
 #### create a git tag for each upload
-git tag "$tag"
+git tag -m "release" "$tag"
 trap 'git tag --delete "$tag"' ERR
 
 #### upload
