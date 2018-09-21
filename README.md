@@ -15,7 +15,7 @@ This command replaces the following steps:
 * If your _server.pbl version is shown somewhere in WML, copy-paste it there.
 * If your _server.pbl description is shown somewhere in WML, copy-paste it.
 * Run `luacheck` on your code if you use lua files.
-* `git tag` your commit with exactly the same version you used in _server.pbl. This may help debugging later a lot. Otherwise you won't remember what you had in release X.Y.Z after a few days/hours/releases.
+* `git tag` your commit with exactly the same version you used in _server.pbl. This may help later debugging a lot. Otherwise you won't remember what you had in release X.Y.Z after a few days/hours/releases.
 * Start wesnoth, open add-ons, find your add-on, click upload.
 * If you also use a development wesnoth version, repeat last step there as well.
 

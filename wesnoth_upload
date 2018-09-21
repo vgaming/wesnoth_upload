@@ -61,8 +61,7 @@ fi
 
 
 #### increase version according to semver
-last_tag=$(git describe --abbrev=0 --tags 2>/dev/null || echo "0.0.0")
-read -ar semver < <(echo "${last_tag//./ }")
+IFS=. read -r -a semver < <(git describe --abbrev=0 --tags 2>/dev/null || echo "0.0.0")
 major=${semver[0]}
 minor=${semver[1]:-0}
 patch=${semver[2]:-0}
