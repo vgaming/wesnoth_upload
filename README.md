@@ -29,15 +29,16 @@ It combines the steps above presuming you follow certain conventions:
 ## Get started
 
 1. Copy the files from [skeleton](./skeleton) dir to your project.
+1. Rename "your_addon_name" dir to your real add-on name
+1. Run `ln -s your_real_addon_name src`. (Symlink from src/ to the new dir.)
+1. Move _server.pbl, all Lua and WML files into src/.
 1. Remove "passphrase" from `_server.pbl` and copy the value to `.build/.passphrase`.
 1. Remove "description" from `_server.pbl` and copy the value to `doc/about.txt`.
 1. Remove "version" from `_server.pbl`.
 1. Optionally, put `_server.pbl` in git as it no longer contains the passphrase.
-1. Specify wesnoth versions your add-on is compatible with (1.14 by default).
+1. Optionally, specify wesnoth versions your add-on is compatible with (1.14 by default).
 1. Commit your changes.
-1. Presuming you want to upload version `X.Y.Z`, execute this in your project dir:
-`wesnoth_upload "X.Y.Z"`
-1. Later, once you have at least one git tag present in your repo, you can use `wesnoth_upload --patch`, `wesnoth_upload --minor` and `wesnoth_upload --major` to bump the version numbers automatically.
+1. Once you have at least one git tag present in your repo, use `wesnoth_upload --patch`, `wesnoth_upload --minor` or `wesnoth_upload --major` to upload the add-on. If you do not have a git tag yet or if you'd like to use a custom version, use "X.Y.Z" istead of "--patch"/"--minor"/"--major".
 
 You may re-configure the steps above in `.build/config.sh`. You may f.e. use a different passphrase generation command if you like. Or change how "description" is generated.
 
