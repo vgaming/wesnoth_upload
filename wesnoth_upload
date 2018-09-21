@@ -24,7 +24,7 @@ mkdir -p src/target
 printf "%s" "$data_dir" > src/target/addon_dir
 
 uncommitted_ignore=false
-not_pushed_ignore=false
+not_pushed_ignore=true
 
 version() {
 	git describe --tags | cut -d '-' -f -2 | tr -d '\n' | tee src/target/version.txt
@@ -40,7 +40,6 @@ passphrase() {
 upload_to_wesnoth_versions=(1.14)
 addon_manager_args=()
 upload() {
-	#--upload ~/.local/share/wesnoth/1.13/data/add-ons/"$data_dir"
 	for ver in "${upload_to_wesnoth_versions[@]}"; do
 		wesnoth_addon_manager --port "$ver.x" \
 			--pbl-key "version" "$(version)" \
