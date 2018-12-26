@@ -89,6 +89,8 @@ printf "%s" "$data_dir" > src/target/addon_dir
 #### upload
 git describe --tags | cut -d '-' -f -2 | tr -d '\n' | tee src/target/version.txt
 cat src/target/version.txt | tr '.-' '__' > src/target/version_nodot.txt
+description >/dev/null
+passphrase >/dev/null
 addon_ver=$(cat src/target/version.txt)
 for ver in "${upload_to_wesnoth_versions[@]}"; do
 	wesnoth_addon_manager --port "$ver.x" \
