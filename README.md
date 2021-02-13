@@ -30,7 +30,7 @@ It combines the steps above presuming you follow certain conventions:
 
 * Copy the files from [skeleton](./skeleton) dir to your project.
 * Rename "your_addon_name" dir to your real add-on name
-* Run `ln -s your_real_addon_name src`. (Symlink from src/ to the new dir.)
+* Run `ln -sf your_real_addon_name src`. (Symlink from src/ to the new dir.)
 * Move _server.pbl, all Lua and WML files into src/.
 * Remove "passphrase" from `_server.pbl` and copy the value to `.build/.passphrase`.
 * Remove "description" from `_server.pbl` and copy the value to `doc/about.txt`.

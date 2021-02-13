@@ -6,10 +6,13 @@ uncommitted_ignore=false
 not_pushed_ignore=true
 
 description() {
-	cat src/doc/about.txt
+  cat src/doc/about.txt
 }
 passphrase() {
-	cat .build/.passphrase
+  if ! test -f .build/.passphrase; then
+    echo "$RANDOM$RANDOM$RANDOM$RANDOM" >> .build/.passphrase
+  fi
+  cat .build/.passphrase
 }
 
 upload_to_wesnoth_versions=(1.14) # (1.14 1.15)

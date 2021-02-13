@@ -94,6 +94,18 @@ printf "%s" "$data_dir" > src/target/addon_dir
 git describe --tags | cut -d '-' -f -2 | tr -d '\n' | tee src/target/version.txt
 cat src/target/version.txt | tr '.-' '__' > src/target/version_nodot.txt
 
+#### if passphrase fuction doesn't exist in user config, define it
+if test "$(type -t passphrase)" != "function"; then
+  passphrase() {
+    if ! test -f .build/.passphrase; then
+      echo "$RANDOM$RANDOM$RANDOM$RANDOM" >> .build/.passphrase
+    fi
+    cat .build/.passphrase
+  }
+else
+  echo "WARN: using a custom user function for passphrase. In the future this might be removed."
+fi
+
 description >/dev/null  # re-generate
 passphrase >/dev/null  # re-generate
 addon_ver=$(cat src/target/version.txt)
