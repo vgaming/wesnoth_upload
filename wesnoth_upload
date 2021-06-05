@@ -98,7 +98,7 @@ cat src/target/version.txt | tr '.-' '__' > src/target/version_nodot.txt
 #### if passphrase fuction doesn't exist in user config, define it
 if test "$(type -t passphrase)" != "function"; then
   passphrase() {
-    if ! test -f .build/.passphrase; then
+    if ! test -s .build/.passphrase; then
       echo "$RANDOM$RANDOM$RANDOM$RANDOM" >> .build/.passphrase
     fi
     cat .build/.passphrase
