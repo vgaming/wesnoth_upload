@@ -27,6 +27,13 @@ if ! source .build/config.sh; then
 fi
 
 
+#### prepare "target" dir
+data_dir=$(basename -- "$(realpath src)")
+mkdir -p src/target
+printf "%s" "$data_dir" > src/target/addon_dir
+test -f src/target/version.txt || echo "0.0.1" > src/target/version.txt
+
+
 #### use luacheck to find possible problems in Lua code
 readarray -td '' all_lua_files < <(find src/ -name '*.lua' -print0)
 if test "${#all_lua_files[@]}" -ne 0; then
@@ -82,12 +89,6 @@ fi
 #### create a git tag for each upload
 git tag -m "release" "$tag"
 trap 'git tag --delete "$tag"' ERR
-
-
-#### prepare "target" dir
-data_dir=$(basename -- "$(realpath src)")
-mkdir -p src/target
-printf "%s" "$data_dir" > src/target/addon_dir
 
 
 #### write the versions in separate file to allow using it in WML
