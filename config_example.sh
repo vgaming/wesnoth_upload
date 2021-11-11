@@ -1,14 +1,14 @@
-luacheck_ignore=false
-luacheckrc='.build/.luacheckrc'
-luacheck_binary='luacheck'
+luacheck_ignore="${luacheck_ignore:-false}"
+luacheckrc="${luacheckrc:-.build/.luacheckrc}"
+luacheck_binary="${luacheck_binary:-luacheck}"
 
-uncommitted_ignore=false
-not_pushed_ignore=true
+uncommitted_ignore="${uncommitted_ignore:-false}"
+not_pushed_ignore="${not_pushed_ignore:-false}"
 
-description() {
+declare -F description 1> /dev/null || description() {
   cat src/doc/about.txt
 }
-passphrase() {
+declare -F passphrase 1> /dev/null || passphrase() {
   if ! test -f .build/.passphrase; then
     echo "$RANDOM$RANDOM$RANDOM$RANDOM" >> .build/.passphrase
   fi
