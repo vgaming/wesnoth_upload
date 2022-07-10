@@ -9,7 +9,7 @@ err_exit() {
 
 #### check arguments
 if test "$#" != 1; then
-	err_exit "ERROR. Invalid number of arguments. Usage:
+	err_exit "[wesnoth_upload] ERROR. Invalid number of arguments. Usage:
 	$0 --patch
 	$0 --minor
 	$0 --major
@@ -23,7 +23,7 @@ source "$example_config_dir"/config_example.sh
 
 #### source user config
 if ! source .build/config.sh; then
-	err_exit "ERROR. Could not source .build/config.sh"
+	err_exit "[wesnoth_upload] ERROR. Could not source .build/config.sh"
 fi
 
 
@@ -40,11 +40,11 @@ if test "${#all_lua_files[@]}" -ne 0; then
 	if test "${luacheck_ignore:-}" = "true"; then
 		true
 	elif ! command -v "$luacheck_binary" >/dev/null 2>&1; then
-		err_exit "WARNING. $luacheck_binary binary not found." \
+		err_exit "[wesnoth_upload] WARNING. $luacheck_binary binary not found." \
 			"Could not check your lua files." \
 			"You can disable luacheck by setting luacheck_ignore=true"
 	elif ! test -f "$luacheckrc"; then
-		err_exit "WARNING: $luacheckrc not found. " \
+		err_exit "[wesnoth_upload] WARNING: $luacheckrc not found. " \
 			"Could not check your lua files. " \
 			"You can disable luacheck by setting luacheck_ignore=true"
 	else
@@ -57,7 +57,7 @@ fi
 
 #### only upload clean git directory, no uncommitted changes
 if ! test -z "$(git status --porcelain)" && test "${uncommitted_ignore:-}" != "true" ; then
-	err_exit "ERROR. You have uncommitted changes." \
+	err_exit "[wesnoth_upload] ERROR. You have uncommitted changes." \
 		"You can disable this check by setting uncommitted_ignore=true"
 fi
 
@@ -66,7 +66,7 @@ fi
 if test "${not_pushed_ignore:-}" != "true" &&
 	! test "$(git rev-parse HEAD)" = "$(git rev-parse '@{u}')"
 then
-	err_exit "ERROR. git push first!" \
+	err_exit "[wesnoth_upload] ERROR. git push first!" \
 		"You can disable this check by setting not_pushed_ignore=true"
 fi
 
@@ -96,15 +96,15 @@ git describe --tags | cut -d '-' -f -2 | tr -d '\n' | tee src/target/version.txt
 cat src/target/version.txt | tr '.-' '__' > src/target/version_nodot.txt
 
 #### if passphrase fuction doesn't exist in user config, define it
-if test "$(type -t passphrase)" != "function"; then
+if test "$(type -t passphrase)" = "function"; then
+  echo "[wesnoth_upload] WARN: using a custom user function for passphrase. In the future this might be removed."
+else
   passphrase() {
     if ! test -s .build/.passphrase; then
       echo "$RANDOM$RANDOM$RANDOM$RANDOM" >> .build/.passphrase
     fi
     cat .build/.passphrase
   }
-else
-  echo "WARN: using a custom user function for passphrase. In the future this might be removed."
 fi
 
 description >/dev/null  # re-generate
