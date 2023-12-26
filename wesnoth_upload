@@ -21,25 +21,24 @@ tag="$1"
 example_config_dir=$(dirname -- "$(realpath -- "$0")")
 source "$example_config_dir"/config_example.sh
 
-#### source user config
+echo "[wesnoth_upload] Sourcing your local config in .build/config.sh..."
 if ! source .build/config.sh; then
   err_exit "[wesnoth_upload] ERROR. Could not source .build/config.sh"
 fi
 
 
-#### prepare "target" dir
+echo '[wesnoth_upload] Preparing the "target" dir...'
 data_dir=$(basename -- "$(realpath src)")
 mkdir -p src/target
 printf "%s" "$data_dir" > src/target/addon_dir
 test -f src/target/version.txt || echo "0.0.1" > src/target/version.txt
+echo '[wesnoth_upload] Target directory and version OK'
 
 
-#### use luacheck to find possible problems in Lua code
+echo "[wesnoth_upload] Using luacheck to find possible problems in Lua code..."
 readarray -td '' all_lua_files < <(find src/ -name '*.lua' -print0)
-if test "${#all_lua_files[@]}" -ne 0; then
-  if test "${luacheck_ignore:-}" = "true"; then
-    true
-  elif ! command -v "$luacheck_binary" >/dev/null 2>&1; then
+if test "${#all_lua_files[@]}" -ne 0 && test "${luacheck_ignore:-}" != "true"; then
+  if ! command -v "$luacheck_binary" >/dev/null 2>&1; then
     err_exit "[wesnoth_upload] WARNING. $luacheck_binary binary not found." \
       "Could not check your lua files." \
       "You can disable luacheck by setting luacheck_ignore=true"
@@ -53,6 +52,7 @@ if test "${#all_lua_files[@]}" -ne 0; then
       --config "$luacheckrc"
   fi
 fi
+echo "[wesnoth_upload] Luacheck OK"
 
 
 echo "[wesnoth_upload] Checking Lua file headers..."
@@ -88,7 +88,7 @@ then
 fi
 
 
-#### increase version according to semver
+echo "[wesnoth_upload] Increasing version number according to semver..."
 IFS=. read -r -a semver < <(git describe --abbrev=0 --tags 2>/dev/null || echo "0.0.0")
 major=${semver[0]}
 minor=${semver[1]:-0}
@@ -102,13 +102,16 @@ elif test "--patch" = "$tag"; then
 #else
 #	err_exit "Unexpected tag name $tag. Please specify either --major, --minor or --patch"
 fi
+echo "[wesnoth_upload] The new version will be $tag"
 
-#### create a git tag for each upload
+
+echo "[wesnoth_upload] Creating a git tag with this version..."
 git tag -m "release" "$tag"
 trap 'git tag --delete "$tag"' ERR
+echo "[wesnoth_upload] Git tag created (might be reverted in case of errors during upload)"
 
 
-#### write the versions in separate file to allow using it in WML
+echo "[wesnoth_upload] Writing the versions in a separate file to allow using it in WML..."
 git describe --tags | cut -d '-' -f -2 | tr -d '\n' | tee src/target/version.txt
 cat src/target/version.txt | tr '.-' '__' > src/target/version_nodot.txt
 
@@ -128,17 +131,22 @@ description >/dev/null  # re-generate
 passphrase >/dev/null  # re-generate
 addon_ver=$(cat src/target/version.txt)
 
+
 #### upload
 for ver in "${upload_to_wesnoth_versions[@]}"; do
+  echo "[wesnoth_upload] Uploading the addon to $ver..."
   wesnoth_addon_manager --port "$ver.x" \
    --pbl-key "version" "$addon_ver" \
     --pbl-key "description" "$(description)" \
     --pbl-key "passphrase" "$(passphrase)" \
     "${addon_manager_args[@]}" \
     --upload "$data_dir"
+  echo "Upload OK"
 done
 
 rm ./packet.dump 2>/dev/null || true
+
+echo "[wesnoth_upload] Success, add-on uploaded"
 
 exit
 }
