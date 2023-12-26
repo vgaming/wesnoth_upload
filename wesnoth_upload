@@ -55,6 +55,23 @@ if test "${#all_lua_files[@]}" -ne 0; then
 fi
 
 
+echo "[wesnoth_upload] Checking Lua file headers..."
+for lua_file in "${all_lua_files[@]}"; do
+  expected_name=$(basename --suffix=.lua -- "$lua_file")
+  expected="-- << $expected_name | $data_dir"
+  actual=$(head -n 1 -- "$lua_file")
+  if test "$actual" != "$expected"; then
+    err_exit "Lua file $lua_file does not have a proper header (first line).
+      Expected:
+      $expected
+      Actual:
+      $actual
+      Such a file header improves debugging in situations when something goes wrong."
+  fi
+done
+echo "[wesnoth_upload] Lua file headers OK"
+
+
 #### only upload clean git directory, no uncommitted changes
 if ! test -z "$(git status --porcelain)" && test "${uncommitted_ignore:-}" != "true" ; then
   err_exit "[wesnoth_upload] ERROR. You have uncommitted changes." \
