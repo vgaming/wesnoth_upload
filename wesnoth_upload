@@ -3,17 +3,17 @@ set -o pipefail
 {
 
 err_exit() {
-	>&2 printf '%s\n' "$*"
-	exit 1
+  >&2 printf '%s\n' "$*"
+  exit 1
 }
 
 #### check arguments
 if test "$#" != 1; then
-	err_exit "[wesnoth_upload] ERROR. Invalid number of arguments. Usage:
-	$0 --patch
-	$0 --minor
-	$0 --major
-	$0 git-tag-name"
+  err_exit "[wesnoth_upload] ERROR. Invalid number of arguments. Usage:
+  $0 --patch
+  $0 --minor
+  $0 --major
+  $0 git-tag-name"
 fi
 tag="$1"
 
@@ -23,7 +23,7 @@ source "$example_config_dir"/config_example.sh
 
 #### source user config
 if ! source .build/config.sh; then
-	err_exit "[wesnoth_upload] ERROR. Could not source .build/config.sh"
+  err_exit "[wesnoth_upload] ERROR. Could not source .build/config.sh"
 fi
 
 
@@ -37,37 +37,37 @@ test -f src/target/version.txt || echo "0.0.1" > src/target/version.txt
 #### use luacheck to find possible problems in Lua code
 readarray -td '' all_lua_files < <(find src/ -name '*.lua' -print0)
 if test "${#all_lua_files[@]}" -ne 0; then
-	if test "${luacheck_ignore:-}" = "true"; then
-		true
-	elif ! command -v "$luacheck_binary" >/dev/null 2>&1; then
-		err_exit "[wesnoth_upload] WARNING. $luacheck_binary binary not found." \
-			"Could not check your lua files." \
-			"You can disable luacheck by setting luacheck_ignore=true"
-	elif ! test -f "$luacheckrc"; then
-		err_exit "[wesnoth_upload] WARNING: $luacheckrc not found. " \
-			"Could not check your lua files. " \
-			"You can disable luacheck by setting luacheck_ignore=true"
-	else
-		${luacheck_binary} "${all_lua_files[@]}" \
-			--globals wesnoth wml --std max \
-			--config "$luacheckrc"
-	fi
+  if test "${luacheck_ignore:-}" = "true"; then
+    true
+  elif ! command -v "$luacheck_binary" >/dev/null 2>&1; then
+    err_exit "[wesnoth_upload] WARNING. $luacheck_binary binary not found." \
+      "Could not check your lua files." \
+      "You can disable luacheck by setting luacheck_ignore=true"
+  elif ! test -f "$luacheckrc"; then
+    err_exit "[wesnoth_upload] WARNING: $luacheckrc not found. " \
+      "Could not check your lua files. " \
+      "You can disable luacheck by setting luacheck_ignore=true"
+  else
+    ${luacheck_binary} "${all_lua_files[@]}" \
+      --globals wesnoth wml --std max \
+      --config "$luacheckrc"
+  fi
 fi
 
 
 #### only upload clean git directory, no uncommitted changes
 if ! test -z "$(git status --porcelain)" && test "${uncommitted_ignore:-}" != "true" ; then
-	err_exit "[wesnoth_upload] ERROR. You have uncommitted changes." \
-		"You can disable this check by setting uncommitted_ignore=true"
+  err_exit "[wesnoth_upload] ERROR. You have uncommitted changes." \
+    "You can disable this check by setting uncommitted_ignore=true"
 fi
 
 
 #### only upload commits that you actually pushed anywhere
 if test "${not_pushed_ignore:-}" != "true" &&
-	! test "$(git rev-parse HEAD)" = "$(git rev-parse '@{u}')"
+  ! test "$(git rev-parse HEAD)" = "$(git rev-parse '@{u}')"
 then
-	err_exit "[wesnoth_upload] ERROR. git push first!" \
-		"You can disable this check by setting not_pushed_ignore=true"
+  err_exit "[wesnoth_upload] ERROR. git push first!" \
+    "You can disable this check by setting not_pushed_ignore=true"
 fi
 
 
@@ -77,11 +77,11 @@ major=${semver[0]}
 minor=${semver[1]:-0}
 patch=${semver[2]:-0}
 if test "--major" = "$tag" ; then
-	tag="$((major+1)).0.0"
+  tag="$((major+1)).0.0"
 elif test "--minor" = "$tag"; then
-	tag="$major.$((minor+1)).0"
+  tag="$major.$((minor+1)).0"
 elif test "--patch" = "$tag"; then
-	tag="$major.$minor.$((patch+1))"
+  tag="$major.$minor.$((patch+1))"
 #else
 #	err_exit "Unexpected tag name $tag. Please specify either --major, --minor or --patch"
 fi
@@ -113,12 +113,12 @@ addon_ver=$(cat src/target/version.txt)
 
 #### upload
 for ver in "${upload_to_wesnoth_versions[@]}"; do
-	wesnoth_addon_manager --port "$ver.x" \
-		--pbl-key "version" "$addon_ver" \
-		--pbl-key "description" "$(description)" \
-		--pbl-key "passphrase" "$(passphrase)" \
-		"${addon_manager_args[@]}" \
-		--upload "$data_dir"
+  wesnoth_addon_manager --port "$ver.x" \
+   --pbl-key "version" "$addon_ver" \
+    --pbl-key "description" "$(description)" \
+    --pbl-key "passphrase" "$(passphrase)" \
+    "${addon_manager_args[@]}" \
+    --upload "$data_dir"
 done
 
 rm ./packet.dump 2>/dev/null || true
