@@ -49,7 +49,7 @@ if test "${#all_lua_files[@]}" -ne 0; then
       "You can disable luacheck by setting luacheck_ignore=true"
   else
     ${luacheck_binary} "${all_lua_files[@]}" \
-      --globals wesnoth wml --std max \
+      --globals wesnoth wml filesystem mathx --std max \
       --config "$luacheckrc"
   fi
 fi
